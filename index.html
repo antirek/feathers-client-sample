@@ -34,8 +34,10 @@ $(function() {
     
     invoiceService.find({
         query: {
+          to: '9135292926',
           $sort: { createdAt: -1 },
-          $limit: 25
+          $limit: 25,
+          $skip: 0
         }
       }).then(function(res) {
         console.log(res);

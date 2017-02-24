@@ -1,0 +1,60 @@
+<div id="out"></div>
+
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/core-js/2.1.4/core.min.js"></script>
+<script type="text/javascript" src="//unpkg.com/feathers-client@^1.0.0/dist/feathers.js"></script>
+
+
+<script type="text/javascript">
+$(function() {
+  var host = 'http://localhost:3030';
+
+  // Set up Feathers client side
+  var app = feathers()
+    .configure(feathers.rest(host).jquery(jQuery))
+    .configure(feathers.hooks())
+    .configure(feathers.authentication({ storage: window.localStorage }));
+
+
+  /*
+  var userService = app.service('/users');
+  userService.create({phone:'9135292926', password:'888'}).then(console.log);
+  */
+
+  // Authenticate. Normally you'd grab these from a login form rather than hard coding them
+
+  var invoiceService = app.service('invoices');
+
+  app.authenticate({
+    type: 'local',
+    'phone': '9135292926',
+    'password': '888'
+  }).then(function(result){
+    console.log('Authenticated!', app.get('token'));
+    
+    invoiceService.find({
+        query: {
+          $sort: { createdAt: -1 },
+          $limit: 25
+        }
+      }).then(function(res) {
+        console.log(res);
+        $('#out').html(JSON.stringify(res));
+      }).catch(function(err){
+        console.log(err);
+      });
+
+    /*
+    invoiceService.create({
+        from: '9987654321',
+        to: '9135292926',
+        text: 'hello'
+    }).then(console.log);
+    */
+  }).catch(function(error){
+    console.error('Error authenticating!', error);
+  });
+
+});
+</script>
+

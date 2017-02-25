@@ -15,26 +15,44 @@ $(function() {
     .configure(feathers.hooks())
     .configure(feathers.authentication({ storage: window.localStorage }));
 
-
-  /*
+  
   var userService = app.service('/users');
-  userService.create({phone:'9135292926', password:'888'}).then(console.log);
-  */
+  userService.create({phone:'9135292926'})
+    .then(res => console.log(res));
+  
 
   // Authenticate. Normally you'd grab these from a login form rather than hard coding them
-
+  /*
   var invoiceService = app.service('invoices');
+  var paymentService = app.service('payments');
 
   app.authenticate({
     type: 'local',
-    'phone': '9135292926',
-    'password': '888'
-  }).then(function(result){
-    console.log('Authenticated!', app.get('token'));
+    'phone': '9135292927',
+    'password': 'gopesa'
+  })
+  .then(result => {
+
+    console.log('Authenticated!', app.get('token'))
     
+
+    paymentService.find().then(res => console.log(res));
+
+    /*
+    paymentService.create({
+      type: 'card',
+      account: '12344543545345'
+    }).then(function(res) {
+      console.log(res);
+    }).catch(function (err){
+      console.log(err);
+    });
+    */
+
+    /*
     invoiceService.find({
         query: {
-          to: '9135292926',
+          from: '9135292926',
           $sort: { createdAt: -1 },
           $limit: 25,
           $skip: 0
@@ -45,17 +63,21 @@ $(function() {
       }).catch(function(err){
         console.log(err);
       });
+    */
 
+    
     /*
     invoiceService.create({
-        from: '9987654321',
-        to: '9135292926',
-        text: 'hello'
-    }).then(console.log);
-    */
-  }).catch(function(error){
+        amount: '100',
+        to: '9987654321',
+    })
+    .then(res => console.log(res))
+    .catch(err => console.log(err));
+    
+  }).catch(error => {
     console.error('Error authenticating!', error);
   });
+  */
 
 });
 </script>
